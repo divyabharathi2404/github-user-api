@@ -13,10 +13,10 @@ export default function ViewDetails() {
    useEffect(() => {
       const getUserList = async () => {
          try {
-            let token = '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';
+            //let token = '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';
 
             const octokit = new Octokit({
-               auth: token
+               auth: process.env.REACT_APP_TOKEN
             })
             const resss = await octokit.request('GET /users/{username}', {
                username: userName,
