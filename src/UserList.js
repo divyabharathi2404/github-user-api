@@ -18,7 +18,7 @@ export default function UserList() {
         setError(null);
        
        // let token = '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';
-        console.log("process.env.TOKEN",process.env.REACT_APP_TOKEN)
+      
         const octokit = new Octokit({
           auth: process.env.REACT_APP_TOKEN
         })
@@ -28,7 +28,6 @@ export default function UserList() {
            }
         });
         const data = res.data;
-        console.log("data",data);
         setUserList(data);
         setSkip(true);
         setPageCount(parseInt(data?.length / 6));
