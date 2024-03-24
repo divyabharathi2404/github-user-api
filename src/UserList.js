@@ -4,7 +4,6 @@ import { Avatar, Stack, Card, CardActions, CardHeader, Container, Grid, IconButt
 import { useNavigate } from 'react-router-dom';
 import { ArrowCircleRight } from '@mui/icons-material';
 
-
 export default function UserList() {
   const navigate = useNavigate();
   const [userList, setUserList] = useState([]);
@@ -19,16 +18,17 @@ export default function UserList() {
         setError(null);
        
        // let token = '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';
-
+        console.log("process.env.TOKEN",process.env.REACT_APP_TOKEN)
         const octokit = new Octokit({
-          //  /auth: token
+          auth: process.env.REACT_APP_TOKEN
         })
-        const res = await octokit.request('GET /user', {
+        const res = await octokit.request('GET /users', {
            headers: {
               'X-GitHub-Api-Version': '2022-11-28'
            }
         });
         const data = res.data;
+        console.log("data",data);
         setUserList(data);
         setSkip(true);
         setPageCount(parseInt(data?.length / 6));
