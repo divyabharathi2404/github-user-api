@@ -18,10 +18,10 @@ export default function UserList() {
       try {
         setError(null);
        
-        let token = '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';
+       // let token = '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';
 
         const octokit = new Octokit({
-           auth: token
+          //  /auth: token
         })
         const res = await octokit.request('GET /user', {
            headers: {
