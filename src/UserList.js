@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Octokit } from "@octokit/core";
 import { Avatar, Stack, Card, CardActions, CardHeader, Container, Grid, IconButton, Typography, Pagination } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { ArrowCircleRight } from '@mui/icons-material';
@@ -16,17 +17,18 @@ export default function UserList() {
     const getUserList = async () => {
       try {
         setError(null);
-        // let token = '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';
-        let headers = {
-          'content-type': "application/vnd.github+json",
-          'Authorization': "Bearer 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"
-        }
-        const resp = await fetch('https://api.github.com/users', {
-          method: 'GET',
-          headers: headers,
-        });
-        const data = await resp.json();
+       
+        let token = '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';
 
+        const octokit = new Octokit({
+           auth: token
+        })
+        const res = await octokit.request('GET /user', {
+           headers: {
+              'X-GitHub-Api-Version': '2022-11-28'
+           }
+        });
+        const data = res.data;
         setUserList(data);
         setSkip(true);
         setPageCount(parseInt(data?.length / 6));

@@ -13,7 +13,7 @@ export default function ViewDetails() {
    useEffect(() => {
       const getUserList = async () => {
          try {
-            let token = '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';
+            let token = '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';
 
             const octokit = new Octokit({
                auth: token
