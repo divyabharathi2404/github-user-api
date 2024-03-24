@@ -19,7 +19,7 @@ export default function UserList() {
         // let token = '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';
         let headers = {
           'content-type': "application/vnd.github+json",
-          'Authorization': "Bearer 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"
+          'Authorization': "Bearer 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"
         }
         const resp = await fetch('https://api.github.com/users', {
           method: 'GET',
