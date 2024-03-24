@@ -13,7 +13,7 @@ export default function ViewDetails() {
    useEffect(() => {
       const getUserList = async () => {
          try {
-            let token = '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';
+            let token = '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';
 
             const octokit = new Octokit({
                auth: token
@@ -55,7 +55,7 @@ export default function ViewDetails() {
                   <Box>
                      <IconButton
                         sx={{ color: 'green', float: "left" }}
-                        href={`/`}
+                        href={"/github-user-api"}
                      >
                         <ArrowBack sx={{ width: 28, height: 28 }} />
                      </IconButton>

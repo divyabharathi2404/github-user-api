@@ -10,8 +10,8 @@ function App() {
       <>
         <BrowserRouter>
           <Routes >
-            <Route  index path ='/' element={<UserList/>}/> 
-            <Route  path ='/:userName' element={<ViewDetails/>}/> 
+            <Route  index  path="/github-user-api" element={<UserList/>}/> 
+            <Route  path ='/github-user-api/:userName' element={<ViewDetails/>}/> 
           </Routes>
         </BrowserRouter>
       </>
