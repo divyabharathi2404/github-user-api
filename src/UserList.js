@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Octokit } from "@octokit/core";
-import { Avatar, Stack, Card, CardActions, CardHeader, Container, Grid, IconButton, Typography, Pagination } from '@mui/material';
+import { Avatar, Stack, Card, CardActions, CardHeader, Container, Grid, IconButton, Typography, Pagination,Box, TextField, Button ,Input} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { ArrowCircleRight } from '@mui/icons-material';
 
@@ -12,12 +12,24 @@ export default function UserList() {
   const [pageDtls, setPageDtls] = useState([]);
   const [skip, setSkip] = useState(false);
   const [error, setError] = useState(null);
+  const [searchData, setSearchData] = useState({
+    userName:'',
+    location:''
+  });
+  const paginationData= (data) => {
+    setPageCount(parseInt(data?.length / 6));
+    let dtlsList = [];
+    for (let i = 0; i < 6; i++) {
+      dtlsList.push(data[i])
+    }
+    setPageDtls(dtlsList);
+  }
   useEffect(() => {
     const getUserList = async () => {
       try {
         setError(null);
        
-       // let token = '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';
+       // token = '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';
       
         const octokit = new Octokit({
           auth: process.env.REACT_APP_TOKEN
@@ -30,12 +42,7 @@ export default function UserList() {
         const data = res.data;
         setUserList(data);
         setSkip(true);
-        setPageCount(parseInt(data?.length / 6));
-        let dtlsList = [];
-        for (let i = 0; i < 6; i++) {
-          dtlsList.push(data[i])
-        }
-        setPageDtls(dtlsList)
+        paginationData(data)
       } catch (error) {
         setError(error?.message)
       }
@@ -55,6 +62,44 @@ export default function UserList() {
     }
     setPageDtls(dtlsList);
   }
+  const handleSearchData= (event) => {
+    setSearchData ({
+        ...searchData,
+        [`${event.target.name}`]: event.target.value
+      });
+  }
+  const handleSubmit = async () => {
+      const octokit = new Octokit({
+        auth: process.env.REACT_APP_TOKEN
+      });
+      let uri = '/search/users' 
+      let uriParams = (searchData.userName && searchData.location ) 
+            ? `?q=${searchData.userName}+location:${searchData.location}`
+            : searchData.userName 
+              ? `?q=${searchData.userName}`
+              : searchData.location 
+                ? `?q=location:${searchData.location}`
+                : '' ;
+      if(uriParams) {
+        uri = uri+uriParams
+      }else{
+        uri = '/users'
+      }
+      const res = await octokit.request(`GET ${uri}`, {
+         headers: {
+            'X-GitHub-Api-Version': '2022-11-28'
+         }
+      });
+      const data = res.data;
+      if(uri === '/users'){
+        paginationData(data);
+        setUserList(data);
+      }else{
+        paginationData(data.items);
+        setUserList(data.items);
+      }
+      
+  }
   return (
     <>
       {
@@ -70,6 +115,23 @@ export default function UserList() {
                 </header>
               </div>
               <Container sx={{ paddingBottom: 10 }}>
+                <Box sx={{marginBottom:8}}>
+                <Stack direction="row" justifyContent="space-around" alignItems="center"> 
+                    <Input  name="userName" placeholder="User Name" variant="contained" onChange={(e) => {
+                      e.preventDefault();
+                      handleSearchData(e);
+                    }}/>
+                  <Input  name="location" label="Location" placeholder="Location" variant="contained" onChange={(e) => {
+                      e.preventDefault();
+                      handleSearchData(e);
+                    }}/>
+                    
+                    <Button variant="contained"  onClick={(e)=> {
+                      e.preventDefault();
+                      handleSubmit(e);
+                    }}>Search</Button>
+                </Stack>
+                </Box>
                 <Grid container columnSpacing={4} rowSpacing={2} columns={{ xs: 2, sm: 8, md: 12 }}>
                   {
                     pageDtls?.length > 0
